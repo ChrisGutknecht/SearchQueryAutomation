@@ -97,12 +97,6 @@ function nrSearchqueryAutomator() {
 	// 2. Match entities to queries
 	var queryToEntityMatcher = new QueryToEntityMatcher(queriesNew, entitiesObject);
 	var entityMatches = queryToEntityMatcher.calculateEntityMatches();
-
-	// SPECIAL EARLY RETURN for HEROCONF DEMO
-	if(API_KEY === "aDfUSTUqn45D2WJJ8LrxnMcPQSLVcf8y") { return Logger.log(entityMatches); Logger.log("***** Thanks for testing this script! - Do reach out in case of questions: cgutknecht@noriskshop.de"); }
-
-	// SPECIAL IF STATEMENT for HEROCONF DEMO
-	if(API_KEY !== "aDfUSTUqn45D2WJJ8LrxnMcPQSLVcf8y") {
 	
 	// 3. Look for search results for the specific query
 
@@ -208,7 +202,7 @@ function nrSearchqueryAutomator() {
 
 	}
 
-	} // END IF NOT HERO CONF DEMO API KEY
+
 }
 
 
