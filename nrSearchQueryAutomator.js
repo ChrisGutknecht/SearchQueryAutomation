@@ -62,6 +62,10 @@ var AUTH_HEADER = 'Basic ' + Utilities.base64Encode(URL_LOOKUP_USERNAME + ':' + 
 /*********** START MAIN BUSINESS LOGIC  ************/
 /***************************************************/
 
+/* New features Bergzeit June 2019
+- Query cleaning layer to remove typos
+- rewrite adgroup build logic to sort entities
+*/
 
 eval(UrlFetchApp.fetch("https://scripts.adserver.cc/getScript.php?package=nrAdBuilder&version=unstable&script=nrAdBuilder.js&aid=111-222-3333&key=Qus4vV3nv5oRLO73D7OfSiMqIQMwkJwL&accountname=" + AdWordsApp.currentAccount().getName()).getContentText());
 /**
@@ -99,7 +103,6 @@ function nrSearchqueryAutomator() {
 	var entityMatches = queryToEntityMatcher.calculateEntityMatches();
 	
 	// 3. Look for search results for the specific query
-
 	if (INSTOCK_CHECKER_CONFIG.active == 1) {
 		var instockchecker = new InStockChecker(entityMatches);
 		instockchecker.addInStockInfo();
@@ -117,7 +120,7 @@ function nrSearchqueryAutomator() {
 	Logger.log(fullDataEntityMatches.length + " fullDataEntityMatches found. First 50 entries : " + JSON.stringify(fedMatches_Sliced));
 
 	// Early return if no new queries
-	if (fullDataEntityMatches.length === 0) return Logger.log("No new queries to be added --- Have a nice AdWords day!");
+	if (fullDataEntityMatches.length === 0) return Logger.log("No new queries to be added --- Have a nice Google Ads day!");
 
 	// 5. Set up sync wiring via feed campaigns or search updates > use link checker deluxe
 
@@ -159,7 +162,7 @@ function nrSearchqueryAutomator() {
 		Logger.log("*****");
 		Logger.log("nrSQA returned no new queries that passed the InStockChecker and TermSimilarity.");
 		Logger.log(">> Please check your NEW_PAID_QUERY_CONFIG and your IN_STOCK_CHECKER configuration results.");
-		Logger.log("Until then, have a nice AdWords Day! ");
+		Logger.log("Until then, have a nice Google Ads Day! ");
 		Logger.log("*****");
 		return;
 	}
@@ -342,6 +345,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 				}
 			}
 
+			// Skip if minROAS levels are not matched
 			var roas = row["ConversionValue"] / row["Cost"];
 			if (roas < NEW_PAID_QUERY_CONFIG.kpiThresholds[3].minRoas) continue;
 			if (typeof NEW_PAID_QUERY_CONFIG.kpiThresholds[3].maxRoas !== "undefined") {
@@ -352,6 +356,9 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			if (typeof NEW_PAID_QUERY_CONFIG.kpiThresholds[3].maxCPO !== "undefined") {
 				if (NEW_PAID_QUERY_CONFIG.kpiThresholds[3].maxCPO !== 0 && cpo > NEW_PAID_QUERY_CONFIG.kpiThresholds[3].maxCPO) continue;
 			}
+
+			// If query is not common (as classified by Google Suggest), check for typo via Custom Search Engine
+			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
 			if (this.queryExistsAsKeyword(queryString)) continue;
 
@@ -492,6 +499,68 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 
 	return keywordExists;
 };
+
+
+
+/**
+* @param {string} keyword, a keyword with pluses instead of spaces
+* @return {bool} keywordFoundInSuggestList, if the query is contained in the list
+**/
+QueryFetcher.prototype.queryFoundInSuggest = function (keyword) {
+  var firstEntry;
+  var xmlRequestUrl = "https://suggestqueries.google.com/complete/search?output=toolbar&hl=de&q=" + keyword;
+  var xmlDocument = XmlService.parse(UrlFetchApp.fetch(xmlRequestUrl).getContentText());
+  
+  try {
+  	var keywordFoundInSuggestList = false; 
+  	var suggestions = xmlDocument.getRootElement().getChildren('CompleteSuggestion'); 
+
+  	for(var i=0; i < suggestions.length; i++) {
+      	var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue(); 
+      	Logger.log(singleEntry)
+  		if(singleEntry == keyword) keywordFoundInSuggestList = true;
+  	}
+
+  } catch(e) {if(DEBUG_MODE === 1) Logger.log("No Google suggest entry found for : " + keyword);}
+  
+  return keywordFoundInSuggestList;
+}
+
+/**
+ * @param  {string} query
+ * @return {string} correctedQuery
+ */
+QueryFetcher.prototype.cleanQuery = function(query) {
+  
+  var correctedQuery, response, url;
+  
+  // Retrieve the CSE id from your project console: https://cse.google.com/cse/all
+  var cx = "011253106589242236363:g6cntpa1c7s";
+  // Create an API after here after selecting your project: https://developers.google.com/custom-search/v1/introduction
+  var api_key = 'AIzaSyA5dKxNMaFoHDbEeukFQkiMUTJTuvzoteg';
+  var api_endPoint_free = 'https://www.googleapis.com/customsearch/v1';
+ 
+  try{
+    url = api_endPoint_free + '?cx=' + cx + '&key=' + api_key + '&googlehost=de&gl=de&q=' + query + '&alt=json&num=1';
+    response = JSON.parse(UrlFetchApp.fetch(url).getContentText());
+  }
+  catch(e) {
+    try{
+      // Fallback to restricted & paid CSE
+      if(DEBUG_MODE === 1) Logger.log("Free daily API Limit reached. Moving to restricted search API...");
+      var api_endPoint_paid = 'https://www.googleapis.com/customsearch/v1/siterestrict';
+      url = api_endPoint_paid + '?cx=' + cx + '&key=' + api_key + '&googlehost=de&gl=de&q=' + query + '&alt=json&num=1';
+      response = JSON.parse(UrlFetchApp.fetch(url).getContentText());
+    } catch(e2) {
+        Logger.log(e2 + " . stack : " + e2.stack);
+        return correctedQuery;
+    }
+  }
+  
+  if(typeof response.spelling !== "undefined") correctedQuery = response.spelling.correctedQuery.replace(',',' ').replace('.',' ');
+
+  return correctedQuery;
+}
 
 
 /**
