@@ -517,7 +517,6 @@ QueryFetcher.prototype.queryFoundInSuggest = function (keyword) {
 
   	for(var i=0; i < suggestions.length; i++) {
       	var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue();
-      	Logger.log(singleEntry)
   		if(singleEntry == keyword) keywordFoundInSuggestList = true;
   	}
 
