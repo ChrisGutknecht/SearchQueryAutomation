@@ -67,12 +67,13 @@ var AUTH_HEADER = 'Basic ' + Utilities.base64Encode(URL_LOOKUP_USERNAME + ':' + 
 - rewrite adgroup build logic to sort entities
 */
 
-eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
 /**
  * [nrSearchqueryAutomator description]
  * @return {[type]} [description]
  */
 function nrSearchqueryAutomator() {
+
+	eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
 
 	// 0. Load queries
 	var queryFetcher = new QueryFetcher();
