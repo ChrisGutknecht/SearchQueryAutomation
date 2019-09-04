@@ -73,7 +73,7 @@ var AUTH_HEADER = 'Basic ' + Utilities.base64Encode(URL_LOOKUP_USERNAME + ':' + 
  */
 function nrSearchqueryAutomator() {
 
-	eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
+	var nrCampaignBuilder = eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
 
 	// 0. Load queries
 	var queryFetcher = new QueryFetcher();
