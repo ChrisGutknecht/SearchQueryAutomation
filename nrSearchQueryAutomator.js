@@ -372,6 +372,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			allQueryStrings.push(queryString);
 			queries.push(query);
 
+			if(queries.length % 5) Logger.log(JSON.stringify(queries));
 
 			var maxAmount = 50;
 			if(STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups === true) {
@@ -516,7 +517,7 @@ QueryFetcher.prototype.queryFoundInSuggest = function (keyword) {
   	var suggestions = xmlDocument.getRootElement().getChildren('CompleteSuggestion');
 
   	for(var i=0; i < suggestions.length; i++) {
-      	var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue();
+      var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue();
   		if(singleEntry == keyword) keywordFoundInSuggestList = true;
   	}
 
