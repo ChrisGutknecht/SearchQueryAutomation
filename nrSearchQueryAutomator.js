@@ -8,7 +8,7 @@
 - If you tried to log this into the AdWords Scripts console, it's not going to work with the 100k char logger limit
 - If you managed to log this into to the browser (good job finding the UserAgent), the core business logic is uglified and impossible to reverse engineer
 
-NOTE: This specific request is logged via Google Analytics including the AdWords account ID and will trigger an alert on behalf of norisk. 
+NOTE: This specific request is logged via Google Analytics including the AdWords account ID and will trigger an alert on behalf of norisk.
 
 
 
@@ -67,7 +67,7 @@ var AUTH_HEADER = 'Basic ' + Utilities.base64Encode(URL_LOOKUP_USERNAME + ':' + 
 - rewrite adgroup build logic to sort entities
 */
 
-eval(UrlFetchApp.fetch("https://scripts.adserver.cc/getScript.php?package=nrAdBuilder&version=unstable&script=nrAdBuilder.js&aid=111-222-3333&key=Qus4vV3nv5oRLO73D7OfSiMqIQMwkJwL&accountname=" + AdWordsApp.currentAccount().getName()).getContentText());
+eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js");
 /**
  * [nrSearchqueryAutomator description]
  * @return {[type]} [description]
@@ -101,7 +101,7 @@ function nrSearchqueryAutomator() {
 	// 2. Match entities to queries
 	var queryToEntityMatcher = new QueryToEntityMatcher(queriesNew, entitiesObject);
 	var entityMatches = queryToEntityMatcher.calculateEntityMatches();
-	
+
 	// 3. Look for search results for the specific query
 	if (INSTOCK_CHECKER_CONFIG.active == 1) {
 		var instockchecker = new InStockChecker(entityMatches);
@@ -178,10 +178,10 @@ function nrSearchqueryAutomator() {
 
 	if(typeof STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups != "undefined" && STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups && STRUCTURE_IDENTIFIER.newadgroups.bmmAdgroupSuffix != "undefined" && STRUCTURE_IDENTIFIER.newadgroups.bmmAdgroupPrefix != "undefined"){
 		Logger.log("Second nrCampaignBuilder call for bmm adgroups.");
-		
+
 		var adgroup_suffix = STRUCTURE_IDENTIFIER.newadgroups.newAdgroupSuffix;
 		var adgroup_prefix = STRUCTURE_IDENTIFIER.newadgroups.newAdgroupPrefix;
-		
+
 		// change name of adgroup and campaign
 		for(var z = 1; z < feed_content.length; z++){
 
@@ -191,7 +191,7 @@ function nrSearchqueryAutomator() {
 			if(typeof NEW_CAMPAIGN_CONFIG.setExtraBMMCampaign != "undefined" && typeof NEW_CAMPAIGN_CONFIG.extraBMMCampaignSuffix != "undefined" && NEW_CAMPAIGN_CONFIG.setExtraBMMCampaign === 1 && NEW_CAMPAIGN_CONFIG.extraBMMCampaignSuffix.length > 0){
 				feed_content[z][10] = feed_content[z][10] + NEW_CAMPAIGN_CONFIG.extraBMMCampaignSuffix;
 			}
-			
+
 		}
 		// set global variables for correct keyword matchtype creation
 		NEW_CAMPAIGN_CONFIG.allowedMatchTypes = "nonExact";
@@ -199,7 +199,7 @@ function nrSearchqueryAutomator() {
 		Logger.log(feed_content[0]);
 		Logger.log(feed_content[1]);
 		Logger.log(feed_content[2]);
-		
+
 		// second call to nrCampaignBuilder with modified adgroup and campaign names and different matchtype variables
 		nrCampaignBuilder(feed_content);
 
@@ -218,12 +218,12 @@ function nrSearchqueryAutomator() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 0. FEEDCOLUMNVALIDATOR @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function FeedColumnValidator(feedContent,requiredColums,extraColumns){
@@ -253,7 +253,7 @@ FeedColumnValidator.prototype.getColumnMapper = function() {
       }
     }
   } catch(e){Logger.log("NoExtraColumnInfo: No additional, account-specfic columns were added to feed.");}
-  
+
   for(var k=0; k<headerColumn.length; k++){
     columnMapper[headerColumn[k].toLowerCase()] = k;
   }
@@ -270,12 +270,12 @@ FeedColumnValidator.prototype.getColumnMapper = function() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 0. QUERYFETCHER @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * [QueryFetcher description]
@@ -373,11 +373,11 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			queries.push(query);
 
 
-			var maxAmount = 50; 
+			var maxAmount = 50;
 			if(STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups === true) {
 				maxAmount = maxAmount / 2;
 			}
-			
+
 			if (queries.length > maxAmount) {
 				break;
 			}
@@ -510,19 +510,19 @@ QueryFetcher.prototype.queryFoundInSuggest = function (keyword) {
   var firstEntry;
   var xmlRequestUrl = "https://suggestqueries.google.com/complete/search?output=toolbar&hl=de&q=" + keyword;
   var xmlDocument = XmlService.parse(UrlFetchApp.fetch(xmlRequestUrl).getContentText());
-  
+
   try {
-  	var keywordFoundInSuggestList = false; 
-  	var suggestions = xmlDocument.getRootElement().getChildren('CompleteSuggestion'); 
+  	var keywordFoundInSuggestList = false;
+  	var suggestions = xmlDocument.getRootElement().getChildren('CompleteSuggestion');
 
   	for(var i=0; i < suggestions.length; i++) {
-      	var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue(); 
+      	var singleEntry = suggestions[i].getChild('suggestion').getAttribute('data').getValue();
       	Logger.log(singleEntry)
   		if(singleEntry == keyword) keywordFoundInSuggestList = true;
   	}
 
   } catch(e) {if(DEBUG_MODE === 1) Logger.log("No Google suggest entry found for : " + keyword);}
-  
+
   return keywordFoundInSuggestList;
 }
 
@@ -531,15 +531,15 @@ QueryFetcher.prototype.queryFoundInSuggest = function (keyword) {
  * @return {string} correctedQuery
  */
 QueryFetcher.prototype.cleanQuery = function(query) {
-  
+
   var correctedQuery, response, url;
-  
+
   // Retrieve the CSE id from your project console: https://cse.google.com/cse/all
   var cx = "011253106589242236363:g6cntpa1c7s";
   // Create an API after here after selecting your project: https://developers.google.com/custom-search/v1/introduction
   var api_key = 'AIzaSyA5dKxNMaFoHDbEeukFQkiMUTJTuvzoteg';
   var api_endPoint_free = 'https://www.googleapis.com/customsearch/v1';
- 
+
   try{
     url = api_endPoint_free + '?cx=' + cx + '&key=' + api_key + '&googlehost=de&gl=de&q=' + query + '&alt=json&num=1';
     response = JSON.parse(UrlFetchApp.fetch(url).getContentText());
@@ -556,7 +556,7 @@ QueryFetcher.prototype.cleanQuery = function(query) {
         return correctedQuery;
     }
   }
-  
+
   if(typeof response.spelling !== "undefined") correctedQuery = response.spelling.correctedQuery.replace(',',' ').replace('.',' ');
 
   return correctedQuery;
@@ -631,12 +631,12 @@ QueryFetcher.prototype.getNewOrganicQueries = function(queriesNew) {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 1. ENTITYDATAFETCHER @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * [EntityDataFetcher description]
@@ -958,12 +958,12 @@ EntityDataFetcher.prototype.getSizesByTitle = function(title) {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 2. QUERY_TO_ENTITY_MATCHER @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * [QueryToEntityMatcher description]
  * @param {[type]} queries        [description]
@@ -1059,7 +1059,7 @@ QueryToEntityMatcher.prototype.calculateEntityMatches = function() {
 //
 // 2.1. MATCH BRANDS
 //
-///////////////////////////////////////////////// 
+/////////////////////////////////////////////////
 /**
  * [extractFullBrands description]
  * @param  {string} query               [description]
@@ -1175,7 +1175,7 @@ QueryToEntityMatcher.prototype.extractPartialBrands = function(query, queryObjec
 						queryObjectEntities.brand.partialMatches[0].maxMatchString = newEntry.matchString;
 					}
 				}
-			} // END for loop brand tokenized   
+			} // END for loop brand tokenized
 		}
 	}
 	if (queryObjectEntities.brand.partialMatches) {
@@ -1313,7 +1313,7 @@ QueryToEntityMatcher.prototype.extractPartialCategories = function(query, queryO
 					queryObjectEntities.category.partialMatches[0].maxMatchString = newEntry.matchString;
 				}
 			}
-		} // END for loop brand tokenized 
+		} // END for loop brand tokenized
 	}
 	if (queryObjectEntities.category.partialMatches) {
 		queryObjectEntities._overallMatchValue += queryObjectEntities.category.partialMatches[0].maxMatchValue;
@@ -1332,7 +1332,7 @@ QueryToEntityMatcher.prototype.extractPartialCategories = function(query, queryO
  * @param {string} fullCategory
  * @param {string} partialCategory
  * @return {bool} isEdgeCase
- * @throws {exception} PartialCategoryEdgeCaseException 
+ * @throws {exception} PartialCategoryEdgeCaseException
  */
 QueryToEntityMatcher.prototype.exitIfPartialCategoryEdgeCase = function(queryObjectEntities, fullCategory, partialCategory) {
 	var isEdgeCase = false;
@@ -1443,7 +1443,7 @@ QueryToEntityMatcher.prototype.extractFullTitles = function(query, queryObjectEn
  * @param {array} queryObjectEntities
  * @param {string} fullTitle
  * @return {bool} isEdgeCase
- * @throws {exception} FullTitleEdgeCaseException 
+ * @throws {exception} FullTitleEdgeCaseException
  */
 QueryToEntityMatcher.prototype.exitIfFullTitleEdgeCase = function(queryObjectEntities, fullTitle) {
 	var isEdgeCase = false;
@@ -1814,12 +1814,12 @@ QueryToEntityMatcher.prototype.extractCustomAttribute = function(query, queryObj
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 2. PARENT_ENTITY_ENHANCER @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function ParentEntityEnhancer() {
 
@@ -1838,7 +1838,7 @@ ParentEntityEnhancer.prototype.addBrandsAndCategories = function(entityMatches, 
 
 		if (!enhancedEntityMatches[i].titles) continue;
 
-		// Add brand value by title lookup 
+		// Add brand value by title lookup
 		if (enhancedEntityMatches[i].titles.fullMatch && enhancedEntityMatches[i].brand) {
 			if (!enhancedEntityMatches[i].brand.fullMatch) {
 				enhancedEntityMatches[i].brand.fullMatch = [{}];
@@ -1873,7 +1873,7 @@ ParentEntityEnhancer.prototype.addBrandsAndCategories = function(entityMatches, 
 			}
 		}
 
-		// Add brand value by shopping CAMPAIGN lookup >> 
+		// Add brand value by shopping CAMPAIGN lookup >>
 		/*if (enhancedEntityMatches[i].brand && typeof STRUCTURE_IDENTIFIER.shopping.campaign != "undefined") {
 				if (!enhancedEntityMatches[i].brand.fullMatch && STRUCTURE_IDENTIFIER.shopping.campaign === "brand" && enhancedEntityMatches[i].querySource.keywordTextMatchingQuery.indexOf("==") != -1) {
 					enhancedEntityMatches[i].brand.fullMatch = [{}];
@@ -2023,12 +2023,12 @@ ParentEntityEnhancer.prototype.addColors = function(entityMatches, entityDataFet
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 3. MATCHED_STRUCTURE_ENHANCER @prototype
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function MatchedStructureEnhancer(entityMatches) {
 	this.entityMatches = entityMatches;
@@ -2286,15 +2286,15 @@ MatchedStructureEnhancer.prototype.addFallBackAdgroup = function(singleEntityMat
 				// Implementation for adgroup build by hierarchy
 				// if(STRUCTURE_IDENTIFIER[entityHierarchy[i]].level == "campaign" && STRUCTURE_IDENTIFIER.extraCampaign.allInOneCampaign === "NO") continue;
 				// fallBackAdgroupName += STRUCTURE_IDENTIFIER[entityHierarchy[i]].optionalPrefix + singleEntityMatch[entityHierarchy[i]].fullMatch[0].maxMatchString;
-				// if(i != entityHierarchy.length-1) fallBackAdgroupName += STRUCTURE_IDENTIFIER.adgroupSeparator; 
+				// if(i != entityHierarchy.length-1) fallBackAdgroupName += STRUCTURE_IDENTIFIER.adgroupSeparator;
 			}
 			if (singleEntityMatch[entityHierarchy[i]].partialMatches && !singleEntityMatch[entityHierarchy[i]].fullMatch) {
 				fallBackAdgroupName += entityHierarchy[i].charAt(0).toUpperCase().replace("T", "M");
 
 				// Implementation for adgroup build by hierarchy
-				// if(STRUCTURE_IDENTIFIER[entityHierarchy[i]].level == "campaign" && STRUCTURE_IDENTIFIER.extraCampaign.allInOneCampaign === "NO" && singleEntityMatch[entityHierarchy[i]].partialMatches[0].maxMatchString.length < 4) continue; 
+				// if(STRUCTURE_IDENTIFIER[entityHierarchy[i]].level == "campaign" && STRUCTURE_IDENTIFIER.extraCampaign.allInOneCampaign === "NO" && singleEntityMatch[entityHierarchy[i]].partialMatches[0].maxMatchString.length < 4) continue;
 				// fallBackAdgroupName += STRUCTURE_IDENTIFIER[entityHierarchy[i]].optionalPrefix + singleEntityMatch[entityHierarchy[i]].partialMatches[0].maxMatchString;
-				// if(i != entityHierarchy.length-1) fallBackAdgroupName += STRUCTURE_IDENTIFIER.newadgroups.adgroupSeparator; 
+				// if(i != entityHierarchy.length-1) fallBackAdgroupName += STRUCTURE_IDENTIFIER.newadgroups.adgroupSeparator;
 			}
 		}
 	} // END Entity Hierachy Loop FallbackName
@@ -2321,7 +2321,7 @@ MatchedStructureEnhancer.prototype.getEntityHierarchy = function() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 4. INSTOCK_CHECKER @prototype
 //
@@ -2410,7 +2410,7 @@ InStockChecker.prototype.addInStockInfo = function() {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 5. ADGROUP_OBJECT_CONVERTER @prototype
 //
@@ -2542,7 +2542,7 @@ AdGroupObjectConverter.prototype.getAdGroupObjects = function() {
 
 		adGroupObjects.push(adGroupObject);
 	} // END FOR i: entityMatches
-	
+
 	if (typeof URL_LOOKUP_CONFIG != "undefined") {
 		if (URL_LOOKUP_CONFIG.type == "Data4Seo") dataHandler.createNewTasks(skippedEntries_UrlLookup.urlLookup_Skips_Terms);
 	}
@@ -2619,7 +2619,7 @@ AdGroupObjectConverter.prototype.getHeadline = function(string) {
 };
 
 AdGroupObjectConverter.prototype.getKeyword = function(entityMatch) {
-	
+
 	var temp_keyword = entityMatch.query;
 	var temp_array = temp_keyword.split(" ");
 	var finalArray = [];
@@ -2653,7 +2653,7 @@ AdGroupObjectConverter.prototype.getUrlSuffix = function(entityMatch, dataHandle
 			var result = this.getUrl_ByLookup(entityMatch.query, dataHandler);
 			//if(result){
 			cleanedSuffix = result;
-			//} 
+			//}
 		}
 	}
 
@@ -2723,7 +2723,7 @@ AdGroupObjectConverter.prototype.getMatchAccuracy = function(entityMatch) {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 6. DATA4SEO_HANDLER @prototype
 //
@@ -2741,18 +2741,18 @@ function Data4SeoHandler(storageHandler) {
 	this.results = {};
 	this.storageHandler = storageHandler;
 
-	// this.data = {}; // new object that stores 
+	// this.data = {}; // new object that stores
 }
 
 /**
- * Submit new queries to API 
+ * Submit new queries to API
  * @param  {Array} queries Array that contains strings representing new queries. If queries already exist in the database, they won't be submitted.
  */
 Data4SeoHandler.prototype.createNewTasks = function(queries) {
 
 	// fetch existing queries
 	/*
-	var query = this.storageHandler.buildSelectQuery_(["query"]);	
+	var query = this.storageHandler.buildSelectQuery_(["query"]);
 	var temp_existingQueries = this.storageHandler.queryDataTable_(query); // get all queries from DB
 	*/
 
@@ -2768,7 +2768,7 @@ Data4SeoHandler.prototype.createNewTasks = function(queries) {
 		}
 	}
 
-	
+
 
 	for (var k = 0; k < queries.length; k++) {
 		query = queries[k];
@@ -2823,11 +2823,11 @@ Data4SeoHandler.prototype.createNewTasks = function(queries) {
 
 /**
  * retrieves the static URL by query
- * @param  {string} query 
+ * @param  {string} query
  * @return {object}       returns an object. The url property contains a string with the extracted url. The similarityValue property contains a float representing the similarity value of query and retrieved url.
  */
 Data4SeoHandler.prototype.getStaticUrl = function(query) {
-	
+
 	/* var db_query = this.storageHandler.buildSelectQuery_(["url","similarityValue"], [{inputField: "query", operator: "=", value: query}]);
 	var results = this.storageHandler.queryDataTable_(db_query);
 	*/
@@ -2842,7 +2842,7 @@ Data4SeoHandler.prototype.getStaticUrl = function(query) {
 
 /*
 * @param {string} query
-* @param {string} url 
+* @param {string} url
 * @return {float} simValue
 */
 Data4SeoHandler.prototype.calculateSimilarityValue = function(query, url) {
@@ -2901,7 +2901,7 @@ Data4SeoHandler.prototype.getRelatedSearches = function(query) {
 
 /**
  * Method that retrieves the results of a data 4 seo api and stores it in BigQuery
- * @param  {array} taskIds 
+ * @param  {array} taskIds
  */
 Data4SeoHandler.prototype.getTaskResults = function(taskIds) {
 
@@ -2918,7 +2918,7 @@ Data4SeoHandler.prototype.getTaskResults = function(taskIds) {
 		var taskId = taskIds[i];
 
 		var fetch_target = API_GET_URL.charAt(API_GET_URL.length - 1) == "/" ? API_GET_URL : API_GET_URL + "/";
-		fetch_target += taskId; // @TODO: Why increment? 
+		fetch_target += taskId; // @TODO: Why increment?
 		var result = JSON.parse(UrlFetchApp.fetch(fetch_target, options));
 		var url, relatedSearches;
 		var query = result.results.organic[0].post_key.replace(URL_LOOKUP_CONFIG.site, "");
@@ -2952,7 +2952,7 @@ Data4SeoHandler.prototype.getTaskResults = function(taskIds) {
 /**
  * computes the intersection of an array of strings
  * @param  {array} array array containing the strings to be computed
- * @return {object}       
+ * @return {object}
  * object = { total: { max_intersect_word: "", max_intersect_value: 0, word_count: 0 }, combinations: {}};
  */
 Data4SeoHandler.prototype._computeWordIntersection = function(array) {
@@ -3033,7 +3033,7 @@ Data4SeoHandler.prototype._getCombinations = function(chars) {
  * calculate letter changes between to words
  * @param  {string} a first word
  * @param  {string} b second word
- * @return {number}  
+ * @return {number}
  */
 Data4SeoHandler.prototype._calculateLetterChanges = function(a, b) {
 	var tmp;
@@ -3147,7 +3147,7 @@ SpreadsheetHandler.prototype.getUrlAndSimValueForQuery = function(query) {
 	var existingQueries = this.controlSpreadsheet.getRange("B2:B" + this.controlSpreadsheet.getLastRow()).getValues();
 	var rowIndex = existingQueries.findIndex(findIndexCallback, query) + 2;
 	if (rowIndex < 2) return [];
-	
+
 	return [[this.controlSpreadsheet.getRange(rowIndex, 3).getValue(), this.controlSpreadsheet.getRange(rowIndex, 6).getValue()]];
 };
 
@@ -3168,23 +3168,23 @@ function findIndexCallback(element) {
 * @return string dateTime
 */
 SpreadsheetHandler.prototype.getTimeStamp = function() {
-   
+
   var currentdate = new Date();
   var currrentHourGmc = currentdate.getUTCHours()+1;
-  
+
   var dateTime =
 		(currentdate.getDate() < 10 ? '0' + currentdate.getDate().toString() : currentdate.getDate()) + "." +
 		(currentdate.getMonth()+1) + "." +
 		currentdate.getFullYear() + " , "  +
 		currrentHourGmc + ":"  +
 		(currentdate.getMinutes() < 10 ? '0' + currentdate.getMinutes().toString() : currentdate.getMinutes());
-   
+
   return dateTime;  // target format = '24.2.2017 , 12:09'
 };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // 7. URL_LOOKUP_STORAGE_HANDLER @prototype
 //
@@ -3313,7 +3313,7 @@ UrlLookupStorageHandler.prototype.createDataSet_ = function() {
 
 /**
  * creates a new table for the given entity type
- * @return {void} 
+ * @return {void}
  */
 UrlLookupStorageHandler.prototype.createTable_ = function() {
 	var table = BigQuery.newTable();
@@ -3406,7 +3406,7 @@ UrlLookupStorageHandler.prototype.buildSelectQuery_ = function(fieldArray, where
 
 /**
  * queries the data table of the storage handler with a previously built query
- * @param  {String} queryString 
+ * @param  {String} queryString
  * @return {Array} values of the response
  */
 UrlLookupStorageHandler.prototype.queryDataTable_ = function(queryString) {
@@ -3607,7 +3607,7 @@ function StaticUrlExtractor(searchEngine) {
 	this.searchEngine = searchEngine;
 
 	switch (searchEngine.toLowerCase()) {
-		// specific DuckDuckGo implementation  
+		// specific DuckDuckGo implementation
 		case "duckduckgo.com":
 			this.urlPrefix = 'https://www.duckduckgo.com/?q=site%3A' + URL_LOOKUP_CONFIG.site + '+';
 			this.extractorObject.elements = [{
@@ -3718,7 +3718,7 @@ StaticUrlExtractor.prototype.calculateSimilarityValue = function(query, url) {
  * calculate letter changes between to words
  * @param  {string} a first word
  * @param  {string} b second word
- * @return {number}  
+ * @return {number}
  */
 StaticUrlExtractor.prototype._calculateLetterChanges = function(a, b) {
 	var tmp;
