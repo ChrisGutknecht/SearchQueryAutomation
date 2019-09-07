@@ -73,7 +73,8 @@ var AUTH_HEADER = 'Basic ' + Utilities.base64Encode(URL_LOOKUP_USERNAME + ':' + 
  */
 function nrSearchqueryAutomator() {
 
-	var nrCampaignBuilder = eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
+	eval(UrlFetchApp.fetch("https://raw.githubusercontent.com/ChrisGutknecht/FeedCampaigns/develop/nrAdBuilder.js"));
+	Logger.log(START_TIME);
 
 	// 0. Load queries
 	var queryFetcher = new QueryFetcher();
@@ -339,12 +340,14 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			if (allQueryStrings.indexOf(queryString) != -1) continue;
 
 			// Skip if contains excluded word
+			var skipQuery = false;
 			if (typeof NEW_PAID_QUERY_CONFIG.queryExclude != "undefined") {
 				for (var k = 0; k < NEW_PAID_QUERY_CONFIG.queryExclude.length; k++) {
 					var excludedString = NEW_PAID_QUERY_CONFIG.queryExclude[k].toLowerCase();
-					if (row["Query"].indexOf(excludedString) != -1) continue;
+					if (row["Query"].indexOf(excludedString) != -1) skipQuery = true;
 				}
 			}
+			if(skipQuery == true) continue;
 
 			// Skip if minROAS levels are not matched
 			var roas = row["ConversionValue"] / row["Cost"];
