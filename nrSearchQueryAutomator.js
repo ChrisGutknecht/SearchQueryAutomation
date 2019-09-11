@@ -506,7 +506,7 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 		var sourceAccount = MccApp.accounts().withIds([MULTI_ACCOUNT_QUERY_TRANSFER.sourceAccountId]).get().next();
 		MccApp.select(sourceAccount);
 	}
-	
+
 	return keywordExists;
 };
 
@@ -2389,9 +2389,7 @@ InStockChecker.prototype.checkQueryHasSearchResults = function(query) {
 
 		return temp_object;
 	} catch (e) {
-		Logger.log("UrlFetchError for " + url);
-		Logger.log(e.stack);
-		Logger.log(e);
+		Logger.log("UrlFetchError for " + url); // Logger.log(e);
 		return temp_object;
 	}
 };
