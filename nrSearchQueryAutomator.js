@@ -567,7 +567,8 @@ QueryFetcher.prototype.cleanQuery = function(query) {
   }
 
   if(typeof response.spelling !== "undefined") correctedQuery = response.spelling.correctedQuery.replace(',',' ').replace('.',' ');
-
+	if(correctedQuery == undefined) correctedQuery = query;
+	
   return correctedQuery;
 }
 
