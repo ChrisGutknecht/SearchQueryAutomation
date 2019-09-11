@@ -361,6 +361,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			}
 
 			// If query is not common (as classified by Google Suggest), check for typo via Custom Search Engine
+			Logger.log(queryString);
 			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
 			if (this.queryExistsAsKeyword(queryString)) continue;
