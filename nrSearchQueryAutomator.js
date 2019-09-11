@@ -445,14 +445,16 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 		if (keywordIteratorLc.totalNumEntities() > 0) keywordExists = true;
 
 		// 5.2 Search for First letter uppercase keyword
-		if (keywordExists === false) {
-			var queryUpperCaseFirstLetter = query.charAt(0).toUpperCase() + query.slice(1);
-			var keywordIteratorFlUc = AdWordsApp.keywords().withCondition('Text = "' + queryUpperCaseFirstLetter + '"')
-				.withCondition("KeywordMatchType = " + matchTypes[i])
-				.withCondition(campaignStatusCondition).withCondition(adGroupStatusCondition).withCondition(keywordStatusCondition).get();
+		try{
+			if (keywordExists === false) {
+				var queryUpperCaseFirstLetter = query.charAt(0).toUpperCase() + query.slice(1);
+				var keywordIteratorFlUc = AdWordsApp.keywords().withCondition('Text = "' + queryUpperCaseFirstLetter + '"')
+					.withCondition("KeywordMatchType = " + matchTypes[i])
+					.withCondition(campaignStatusCondition).withCondition(adGroupStatusCondition).withCondition(keywordStatusCondition).get();
 
-			if (keywordIteratorFlUc.totalNumEntities() > 0) keywordExists = true;
-		}
+				if (keywordIteratorFlUc.totalNumEntities() > 0) keywordExists = true;
+			}
+		} catch(e) {Logger.log(e + " . stack : " + e.stack);}
 
 		// 5.3 Search for keyword version with all first letters uppercase
 		if (query.split(" ").length === 1) continue;
