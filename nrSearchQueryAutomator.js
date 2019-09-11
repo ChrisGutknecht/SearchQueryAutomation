@@ -502,7 +502,7 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 		var sourceAccount = MccApp.accounts().withIds([MULTI_ACCOUNT_QUERY_TRANSFER.sourceAccountId]).get().next();
 		MccApp.select(sourceAccount);
 	}
-	Logger.log(Query + " exists : " + keywordExists);
+	Logger.log(query + " exists : " + keywordExists);
 	return keywordExists;
 };
 
