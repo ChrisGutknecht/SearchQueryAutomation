@@ -374,7 +374,6 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 
 			allQueryStrings.push(queryString);
 			queries.push(query);
-			Logger.log(JSON.stringify(query));
 
 			var maxAmount = 50;
 			if(STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups === true) {
