@@ -402,11 +402,16 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
  */
 QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 
+
+
 	// 0. MCC Compatibility: Search queries in target account
 	if (typeof MULTI_ACCOUNT_QUERY_TRANSFER !== "undefined" && typeof MccApp !== "undefined") {
 		var targetAccount = MccApp.accounts().withIds([MULTI_ACCOUNT_QUERY_TRANSFER.targetAccountId]).get().next();
 		MccApp.select(targetAccount);
 	}
+
+	var keywordExists = false;
+	if(query == undefined) {Logger.log("Query is undefined"); return keywordExists;}
 
 	// 1. Determining relevant matchtypes
 	var matchTypes = ["EXACT"];
@@ -433,7 +438,6 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 	}
 
 	// 5. Running keyword iterator
-	var keywordExists = false;
 
 	for (var i = 0; i < matchTypes.length; i++) {
 		if (matchTypes.length === 4 && i === 3) query = "+" + query.replace(/ /g, " +");
