@@ -2309,9 +2309,10 @@ MatchedStructureEnhancer.prototype.addFallBackAdgroup = function(singleEntityMat
 		}
 	} // END Entity Hierachy Loop FallbackName
 
-	fallBackAdgroupName += "_";
 	if (brandPrefix) fallBackAdgroupName += brandPrefix + " ";
-	fallBackAdgroupName += singleEntityMatch.query;
+
+	// Hard coded new adgroup name standard: "query | SQA_[$BMG$] {e}"
+	fallBackAdgroupName = singleEntityMatch.query + " | SQA_" + fallBackAdgroupName;
 
 	if (typeof STRUCTURE_IDENTIFIER.newadgroups.newAdgroupSuffix != "undefined") fallBackAdgroupName += STRUCTURE_IDENTIFIER.newadgroups.newAdgroupSuffix;
 	return fallBackAdgroupName;
