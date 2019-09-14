@@ -541,7 +541,7 @@ QueryFetcher.prototype.queryExistsAsQuery = function(query, adGroupName) {
 	try {
     while (sqReportRows.hasNext()) {
       var row = sqReportRows.next();
-      Logger.log("Query '" + query + "' found elsewhere : " +  row["CampaignName"] + " | " + row["AdGroupName"]);
+      Logger.log("Query '" + query + "' found elsewhere : " +  row["CampaignName"] + " | '" + row["AdGroupName"] + "'");
 			queryExists = true;
 			break;
 		}
