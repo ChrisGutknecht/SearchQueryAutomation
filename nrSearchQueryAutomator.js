@@ -546,7 +546,7 @@ QueryFetcher.prototype.queryExistsAsQuery = function(query, campaignName, adGrou
 			queryExists = true;
 			break;
 		}
-	} catch (e) {e + " . " + e.stack); }
+	} catch (e) {Logger.log(e + " . " + e.stack); }
 
 	return queryExists;
 }
