@@ -364,6 +364,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
 			if (this.queryExistsAsKeyword(queryString)) continue;
+			if (this.queryExistsAsQuery(queryString), row["CampaignName"], row["AdGroupName"] ) continue;
 
 			var query = {
 				"queryString": queryString,
@@ -398,7 +399,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 /**
  * [queryExistsAsKeyword description]
  * @param  {string} query
- * @return {bool} hasNext
+ * @return {bool} keywordExists
  */
 QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 
@@ -510,6 +511,45 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
 	return keywordExists;
 };
 
+
+/**
+ * [queryExistsAsKeyword description]
+ * @param  {string} query
+ * @param  {string} campaignName
+ * @param  {string} adGroupName
+ * @return {bool} queryExists
+ */
+QueryFetcher.prototype.queryExistsAsQuery = function(query, campaignName, adGroupName) {
+
+	var queryExists = false;
+	try {
+    var selectQuery =
+        'SELECT Query,KeywordTextMatchingQuery,QueryMatchTypeWithVariant,CampaignName,CampaignStatus,AdGroupName,AdGroupStatus,Clicks,Cost,Ctr,Conversions,CostPerConversion,ConversionValue,AverageCpc ' +
+        'FROM SEARCH_QUERY_PERFORMANCE_REPORT ' +
+        'WHERE Query = \"' + query + '\" AND Clicks > 1 AND Impressions > 9 AND AdGroupName != \"' + adGroupName + '\" ' +
+        'AND CampaignName DOES_NOT_CONTAIN_IGNORE_CASE \"' + STRUCTURE_IDENTIFIER.shopping.campaignIdentifier + '\" AND CampaignName DOES_NOT_CONTAIN_IGNORE_CASE "DSA" ' +
+        'AND CampaignStatus = ENABLED AND CampaignStatus != REMOVED AND AdGroupStatus = ENABLED ' +
+        'DURING LAST_30_DAYS';
+    sqReport = AdsApp.report(selectQuery);
+  } catch (e) {Logger.log("SearchQuerySelectException: " + e); }
+
+  var sqReportRows = sqReport.rows();
+
+  if(!sqReportRows.next()) {
+		return queryExists;
+	}
+	else
+	try {
+    while (sqReportRows.hasNext()) {
+      var row = sqReportRows.next();
+      Logger.log("Query '" + query + "' found elsewhere : " +  row["CampaignName"] + " | " + row["AdGroupName"]);
+			queryExists = true;
+			break;
+		}
+	} catch (e) {e + " . " + e.stack); }
+
+	return queryExists;
+}
 
 
 /**
