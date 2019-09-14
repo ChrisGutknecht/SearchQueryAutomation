@@ -533,12 +533,11 @@ QueryFetcher.prototype.queryExistsAsQuery = function(query, adGroupName) {
     sqReport = AdsApp.report(selectQuery);
   } catch (e) {Logger.log("SearchQuerySelectException: " + e); }
 
-  var sqReportRows = sqReport.rows();
+	try {
+    sqReportRows = sqReport.rows();
+    sqReportRows.next();
+  } catch (e) { return queryExists;}
 
-  if(!sqReportRows.next()) {
-		return queryExists;
-	}
-	else
 	try {
     while (sqReportRows.hasNext()) {
       var row = sqReportRows.next();
