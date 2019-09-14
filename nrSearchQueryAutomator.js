@@ -529,7 +529,7 @@ QueryFetcher.prototype.queryExistsAsQuery = function(query, adGroupName) {
         'WHERE Query = \"' + query + '\" AND Clicks > 1 AND Impressions > 9 AND AdGroupName != \"' + adGroupName + '\" ' +
         'AND CampaignName DOES_NOT_CONTAIN_IGNORE_CASE \"' + STRUCTURE_IDENTIFIER.shopping.campaignIdentifier + '\" AND CampaignName DOES_NOT_CONTAIN_IGNORE_CASE "DSA" ' +
         'AND CampaignStatus = ENABLED AND CampaignStatus != REMOVED AND AdGroupStatus = ENABLED ' +
-        'DURING LAST_30_DAYS';
+        'DURING LAST_30_DAYS ';
     sqReport = AdsApp.report(selectQuery);
   } catch (e) {Logger.log("SearchQuerySelectException: " + e); }
 
