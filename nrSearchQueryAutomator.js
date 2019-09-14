@@ -364,7 +364,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
 			if (this.queryExistsAsKeyword(queryString)) continue;
-			if (this.queryExistsAsQuery(queryString), row["CampaignName"], row["AdGroupName"] ) continue;
+			if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) continue;
 
 			var query = {
 				"queryString": queryString,
@@ -519,7 +519,7 @@ QueryFetcher.prototype.queryExistsAsKeyword = function(query) {
  * @param  {string} adGroupName
  * @return {bool} queryExists
  */
-QueryFetcher.prototype.queryExistsAsQuery = function(query, campaignName, adGroupName) {
+QueryFetcher.prototype.queryExistsAsQuery = function(query, adGroupName) {
 
 	var queryExists = false;
 	try {
