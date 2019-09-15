@@ -363,7 +363,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			// If query is not common (as classified by Google Suggest), check for typo via Custom Search Engine
 			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
-			if (this.queryExistsAsKeyword(queryString)) continue;
+			// if (this.queryExistsAsKeyword(queryString)) continue;
 			if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) continue;
 
 			var query = {
