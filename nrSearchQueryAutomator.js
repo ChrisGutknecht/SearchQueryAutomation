@@ -583,9 +583,9 @@ QueryFetcher.prototype.cleanQuery = function(query) {
   var correctedQuery, response, url;
 
   // Retrieve the CSE id from your project console: https://cse.google.com/cse/all
-  var cx = "011253106589242236363:g6cntpa1c7s";
+  var cx = "014836489453389152633:ccrrjjwbm3f";
   // Create an API after here after selecting your project: https://developers.google.com/custom-search/v1/introduction
-  var api_key = 'AIzaSyA5dKxNMaFoHDbEeukFQkiMUTJTuvzoteg';
+  var api_key = 'AIzaSyDAhGbL17bkG2WtCvTXMMpzkMR0ZyS3xew';
   var api_endPoint_free = 'https://www.googleapis.com/customsearch/v1';
 
   try{
