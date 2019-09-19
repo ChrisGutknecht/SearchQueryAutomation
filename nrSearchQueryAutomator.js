@@ -1118,9 +1118,9 @@ QueryToEntityMatcher.prototype.calculateEntityMatches = function() {
 QueryToEntityMatcher.prototype.extractFullBrands = function(query, queryObjectEntities) {
 	for (var j = 0; j < this.entitiesObject.brands.length; j++) {
 
+		var brandAtBeginning = this.entitiesObject.brands[j] + " ";
 		var brandInBetween = " " + this.entitiesObject.brands[j] + " ";
 		var brandAtEnd = " " + this.entitiesObject.brands[j];
-		var brandAtBeginning = this.entitiesObject.brands[j] + " ";
 
 		// run full brand extraction
 		if (query == this.entitiesObject.brands[j] || query.indexOf(brandInBetween) > -1 || query.indexOf(brandAtBeginning) === 0 || (query.indexOf(brandAtEnd) != -1 && query.indexOf(brandAtEnd) == (query.length - brandAtEnd.length))) {
@@ -1144,7 +1144,8 @@ QueryToEntityMatcher.prototype.extractFullBrands = function(query, queryObjectEn
 				queryObjectEntities.brand.fullMatch[0].maxMatchString = newEntry.matchedEntity;
 			}
 		}
-	}
+	} // END for brands
+
 	if (queryObjectEntities.brand.fullMatch) {
 		query = query.replace(queryObjectEntities.brand.fullMatch[0].maxMatchString, "");
 		queryObjectEntities._overallMatchValue += queryObjectEntities.brand.fullMatch[0].maxMatchValue;
