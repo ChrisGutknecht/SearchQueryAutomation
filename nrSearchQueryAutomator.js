@@ -372,10 +372,10 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 				discardedQueries.push(queryString);
 				continue;
 			}
-			if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) {
+			/*if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) {
 				discardedQueries.push(queryString);
 				continue;
-			}
+			}*/
 
 			var query = {
 				"queryString": queryString,
