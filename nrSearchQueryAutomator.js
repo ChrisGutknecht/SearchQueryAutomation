@@ -334,9 +334,11 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 
 			var queryString = row["Query"];
 			var allQueryStrings = [];
+			var discardedQueries = [];
 
 			if (row["Query"] === row["KeywordTextMatchingQuery"].toLowerCase()) continue;
 			if (allQueryStrings.indexOf(queryString) != -1) continue;
+			if (discardedQueries.indexOf(queryString) != -1) continue;
 
 			// Skip if contains excluded word
 			var skipQuery = false;
@@ -346,7 +348,10 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 					if (row["Query"].indexOf(excludedString) != -1) skipQuery = true;
 				}
 			}
-			if(skipQuery == true) continue;
+			if(skipQuery == true) {
+				discardedQueries.push(queryString);
+				continue;
+			}
 
 			// Skip if minROAS levels are not matched
 			var roas = row["ConversionValue"] / row["Cost"];
@@ -363,8 +368,14 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			// If query is not common (as classified by Google Suggest), check for typo via Custom Search Engine
 			if(this.queryFoundInSuggest(queryString) === false) queryString = this.cleanQuery(queryString);
 
-			if (this.queryExistsAsKeyword(queryString)) continue;
-			// if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) continue;
+			if (this.queryExistsAsKeyword(queryString)) {
+				discardedQueries.push(queryString);
+				continue;
+			}
+			if (this.queryExistsAsQuery(queryString), row["AdGroupName"] ) {
+				discardedQueries.push(queryString);
+				continue;
+			}
 
 			var query = {
 				"queryString": queryString,
