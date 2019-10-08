@@ -387,7 +387,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			allQueryStrings.push(queryString);
 			queries.push(query);
 
-			var maxAmount = 50;
+			var maxAmount = 70;
 			if(STRUCTURE_IDENTIFIER.newadgroups.setExactAndBmmAdGroups === true) {
 				maxAmount = maxAmount / 2;
 			}
@@ -1129,6 +1129,8 @@ QueryToEntityMatcher.prototype.calculateEntityMatches = function() {
 QueryToEntityMatcher.prototype.extractFullBrands = function(query, queryObjectEntities) {
 	for (var j = 0; j < this.entitiesObject.brands.length; j++) {
 
+		if(typeof this.entitiesObject.brands[j] == "undefined") continue;
+		
 		var brandAtBeginning = this.entitiesObject.brands[j] + " ";
 		var brandInBetween = " " + this.entitiesObject.brands[j] + " ";
 		var brandAtEnd = " " + this.entitiesObject.brands[j];
