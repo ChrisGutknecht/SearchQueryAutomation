@@ -1129,8 +1129,8 @@ QueryToEntityMatcher.prototype.calculateEntityMatches = function() {
 QueryToEntityMatcher.prototype.extractFullBrands = function(query, queryObjectEntities) {
 	for (var j = 0; j < this.entitiesObject.brands.length; j++) {
 
-		if(typeof this.entitiesObject.brands[j] == "undefined") continue;
-		
+		if(typeof this.entitiesObject.brands[j] == "undefined" ||  this.entitiesObject.brands[j] == undefined) continue;
+
 		var brandAtBeginning = this.entitiesObject.brands[j] + " ";
 		var brandInBetween = " " + this.entitiesObject.brands[j] + " ";
 		var brandAtEnd = " " + this.entitiesObject.brands[j];
