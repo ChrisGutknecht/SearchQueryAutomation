@@ -312,7 +312,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			NEW_PAID_QUERY_CONFIG.kpiThresholds[1].metric + " " + NEW_PAID_QUERY_CONFIG.kpiThresholds[1].operator + " " + NEW_PAID_QUERY_CONFIG.kpiThresholds[1].value + " AND " +
 			NEW_PAID_QUERY_CONFIG.kpiThresholds[2].metric + " " + NEW_PAID_QUERY_CONFIG.kpiThresholds[2].operator + " " + NEW_PAID_QUERY_CONFIG.kpiThresholds[2].value + " AND " +
 			"AdNetworkType2 = 'SEARCH' AND " +
-			"CampaignName DOES_NOT_CONTAIN " + NEW_PAID_QUERY_CONFIG.campaignExclude + " " +
+			"CampaignName DOES_NOT_CONTAIN '" + NEW_PAID_QUERY_CONFIG.campaignExclude + "' " +
 			"DURING " + NEW_PAID_QUERY_CONFIG.timeSpan;
 		Logger.log("QUERY : " + selectQuery);
 
