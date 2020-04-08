@@ -314,6 +314,7 @@ QueryFetcher.prototype.getNewPaidQueries = function() {
 			"AdNetworkType2 = 'SEARCH' AND " +
 			"CampaignName DOES_NOT_CONTAIN " + NEW_PAID_QUERY_CONFIG.campaignExclude + " " +
 			"DURING " + NEW_PAID_QUERY_CONFIG.timeSpan;
+		Logger.log("QUERY : " + selectQuery);
 
 		sqReport = AdWordsApp.report(selectQuery);
 	} catch (e) {
