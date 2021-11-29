@@ -1,10 +1,4 @@
-CLIENT_nrSearchqueryAutomator.txt
-Today
-9:46 pm
 
-You uploaded an item
-Text
-CLIENT_nrSearchqueryAutomator.txt
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 //
@@ -13,18 +7,13 @@ CLIENT_nrSearchqueryAutomator.txt
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
-var API_KEY = "v83CaYXvUWvSyqfvvE7BLWYeoUxuAscq";
-var LICENSED_VERSION = "unstable";
-var EMAIL_RECIPIENTS = ["agross@noriskshop.de"];
-var SCRIPT_NAME = "nrSearchqueryAutomator_APO";
-
-var FEED_URL = "https://transport.productsup.io/585f474a6245a76861cc/channel/141983/apo_sqa.csv";
+var FEED_URL = "$feed_url$";
 var COLUMN_SEPARATOR = ",";  // ONLY "," allowed!
 
 var MULTI_ACCOUNT_QUERY_TRANSFER = {
  'isActive' : true,
- 'sourceAccountId' : '700-399-4709',
- 'targetAccountId' : '983-899-9603',
+ 'sourceAccountId' : '',
+ 'targetAccountId' : '',
 };
 
 
@@ -195,7 +184,7 @@ function main(){
   
   try{
     var test = SpreadsheetApp.openById(AD_SPREADSHEET_ID);
-    var scriptfile_name = "https://scripts.adserver.cc/getScript.php?package=nrSearchqueryAutomator&version="+LICENSED_VERSION+"&script=nrSearchqueryAutomator.js&aid=812-526-8576&key="+API_KEY;
+    var scriptfile_name = "js.url";
     var scriptFile_raw = UrlFetchApp.fetch(scriptfile_name).getContentText();
     // var queryRequest = BigQuery.newQueryRequest(); queryRequest.query = 'select * from ["test"] LIMIT 1;'; var query = BigQuery.Jobs.query(queryRequest, this.projectId);
 
